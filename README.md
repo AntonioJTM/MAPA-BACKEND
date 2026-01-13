@@ -293,7 +293,8 @@ Este proyecto está bajo la Licencia ISC.
 
 ## 👤 Autor
 
-[Antonio de jesus Tristan o Editorial Vortex]
+**Antonio de jesus Tristan 
+**Editorial Vortex
 
 ---
 
