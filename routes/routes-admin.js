@@ -4,6 +4,5 @@ const router = express.Router();
 
 module.exports = () => {
 
-
     return router;
 }
