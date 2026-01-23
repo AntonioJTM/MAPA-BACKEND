@@ -2,10 +2,13 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
+// Ruta base para guardar archivos
+const BASE_UPLOAD_PATH = '/var/www/html';
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const tipo = req.body.type?.toLowerCase();
-        const uploadPath = path.join(__dirname, '../../../../var/www/html/multimedia', tipo);
+        const uploadPath = path.join(BASE_UPLOAD_PATH, 'multimedia', tipo);
 
         fs.mkdir(uploadPath, { recursive: true }, (error) => {
             if (error) {
@@ -47,18 +50,18 @@ const uploadFile = multer({
 }).single('archivo');
 
 const handleFormData = (req, res, next) => {
-    const tipo = req.query.type?.toString();
-    if (tipo === 'Videos') {
-        const videoStorage = multer.diskStorage({
-            destination: (req, file, cb) => {
-                if (file.fieldname === 'videofile') {
-                    const uploadPath = path.join(__dirname, '../../../../var/www/html/multimedia/videos');
-                    fs.mkdir(uploadPath, { recursive: true }, (error) => {
-                        if (error) return cb(error);
-                        cb(null, uploadPath);
-                    });
-                } else {
-                    const uploadPath = path.join(__dirname, '../../../../var/www/html/multimedia/thumbnails');
+        const tipo = req.query.type?.toString();
+        if (tipo === 'Videos') {
+            const videoStorage = multer.diskStorage({
+                destination: (req, file, cb) => {
+                    if (file.fieldname === 'videofile') {
+                        const uploadPath = path.join(BASE_UPLOAD_PATH, 'multimedia/videos');
+                        fs.mkdir(uploadPath, { recursive: true }, (error) => {
+                            if (error) return cb(error);
+                            cb(null, uploadPath);
+                        });
+                    } else {
+                        const uploadPath = path.join(BASE_UPLOAD_PATH, 'multimedia/thumbnails');
                     fs.mkdir(uploadPath, { recursive: true }, (error) => {
                         if (error) return cb(error);
                         cb(null, uploadPath);
@@ -149,7 +152,7 @@ exports.handleUpload = async (req, res) => {
 
         let metadata = '';
         let iconPath = '';
-        const baseDir = path.join(__dirname, '../../../../var/www/html');
+        const baseDir = BASE_UPLOAD_PATH;
 
         const tipoContenidoMap = {
             'Videos': 1,
@@ -598,7 +601,6 @@ exports.handleUpload = async (req, res) => {
     }
 };
 
-
 function cleanMetadata(value) {
     if (!value || typeof value !== 'string') return value;
     
@@ -719,7 +721,7 @@ exports.handleDelete = async (req, res) => {
             });
         }
 
-        const baseDir = path.join(__dirname, '../../../../var/www/html');
+        const baseDir = BASE_UPLOAD_PATH;
         const videoPath = multimediaInfo.MUL_ENLACE || '';
         const thumbnailPath = multimediaInfo.MUL_IMAGEN || '';
 

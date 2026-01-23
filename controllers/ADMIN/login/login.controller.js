@@ -25,7 +25,6 @@ exports.login = async (req, res) => {
                     });
                 }
 
-                // Verificar si hay resultados
                 if (!results || results.length === 0) {
                     return res.status(401).json({
                         success: false,

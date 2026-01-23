@@ -168,8 +168,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(apiLimiter);
 
-// const folderPath = '/var/www/html'; // PRODUCCION
-const folderPath = path.resolve(__dirname, '../var/www/html');
+const folderPath = '/var/www/html';
 console.log(`[INFO] Intentando servir archivos desde: ${folderPath}`);
 
 if (fs.existsSync(folderPath)) {
