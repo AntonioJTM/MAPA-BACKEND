@@ -220,6 +220,7 @@ exports.handleUpload = async (req, res) => {
                     return res.status(400).json({ error: 'json_game no recibido' });
                 }
                 if (req.body.json_game) {
+                    iconPath = req.body.image_game;
                     metadata = req.body.json_game;
                 }
                 break;
@@ -648,6 +649,10 @@ function extractRelativePath(fullPath) {
         if (parts.length > 1) {
             return '/multimedia/' + parts[1].replace(/\\/g, '/');
         }
+    }
+
+    if (fullPath.includes('{"nextpass":')) {
+          return fullPath;
     }
     
     if (fullPath.startsWith('/')) {
