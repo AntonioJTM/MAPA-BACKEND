@@ -4,6 +4,6 @@ const media = require('../controllers/WEB/media.controller');
 
 module.exports = () => {
     router.get('/test', media.getTest);
-    router.post('/getJuegos', media.getJuegos);
+    router.post('/getMultimediaByGr', media.getMultimediaByGr);
     return router;
 }
