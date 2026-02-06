@@ -11,7 +11,7 @@ exports.getTest = (req, res) => {
 exports.getMultimediaByMat = (req, res) => {
   try {
     const { subtipo,materia } = req.body;
-    if (!subtipo,materia) {
+    if (!subtipo || !materia) {
       return res.status(400).json({
         error: "Parámetro faltante",
         message: "Se requiere el parámetro 'subtipo,materia' en el cuerpo de la solicitud.",
