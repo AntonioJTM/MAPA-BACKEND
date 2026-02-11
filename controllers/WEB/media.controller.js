@@ -1,4 +1,5 @@
 const path = require("path");
+const { sendEmailSupport } = require("../../services/emailService");
 
 exports.getTest = (req, res) => {
   try {
@@ -38,6 +39,34 @@ exports.getMultimediaByMat = (req, res) => {
     res.status(500).json({
       error: "Error al obtener getMultimediaByMat",
       detalle: error.message,
+    });
+  }
+};
+
+
+exports.sendEmailSupport = async (req, res) => {
+  const { nombre, correo, mensaje } = req.body;
+  if (!nombre && !correo && !mensaje) {
+    return res.status(400).json({
+      error: "Parámetro faltantes",
+      message: "Se requieren los parámetros 'nombre', 'correo' y 'mensaje' en el cuerpo de la solicitud.",
+    });
+  }
+
+  try {
+    await sendEmailSupport(nombre, correo, mensaje);
+
+    res.status(200).json({
+      success: true,
+      status: "OK",
+      message: "Correo enviado con éxito",
+    });
+  } catch (emailError) {
+    console.error("Error enviando correo:", emailError);
+    res.status(500).json({
+      success: false,
+      status: "ERROR",
+      message: "Error al enviar el correo",
     });
   }
 };

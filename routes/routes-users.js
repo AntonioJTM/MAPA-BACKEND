@@ -7,5 +7,6 @@ module.exports = () => {
     router.get('/test', media.getTest);
     router.post('/getAcces', login.getAcces);
     router.post('/getMultimediaByMat', media.getMultimediaByMat);
+    router.post('/sendEmailSupport', media.sendEmailSupport);
     return router;
 }
