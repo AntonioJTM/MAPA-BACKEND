@@ -63,10 +63,10 @@ exports.sendEmailSupport = async (req, res) => {
     });
   } catch (emailError) {
     console.error("Error enviando correo:", emailError);
-    res.status(500).json({
+    res.status(200).json({
       success: false,
       status: "ERROR",
-      message: "Error al enviar el correo",
+      message: `${emailError.message}`,
     });
   }
 };
