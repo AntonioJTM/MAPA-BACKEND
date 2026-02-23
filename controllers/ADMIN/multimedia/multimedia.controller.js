@@ -1,6 +1,7 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const { getTabsData } = require('./tabs.controller');
 require('dotenv').config();
 
 // Ruta base para guardar archivos
@@ -608,6 +609,14 @@ exports.handleUpload = async (req, res) => {
             }
         }
 
+        if (req.io) {
+            getTabsData(req.db)
+                .then((tabsData) => {
+                    req.io.to('global-room').emit('tabs-count-update', tabsData);
+                })
+                .catch((err) => console.error('[TABS] Error emitiendo tabs tras upload:', err));
+        }
+
     } catch (error) {
         console.error('❌ Error general en handleUpload:', error);
         res.status(500).json({
@@ -830,6 +839,14 @@ exports.handleDelete = async (req, res) => {
                 thumbnail: hasServerThumbnail
             }
         });
+
+        if (req.io) {
+            getTabsData(req.db)
+                .then((tabsData) => {
+                    req.io.to('global-room').emit('tabs-count-update', tabsData);
+                })
+                .catch((err) => console.error('[TABS] Error emitiendo tabs tras delete:', err));
+        }
 
     } catch (error) {
         console.error('❌ Error general en handleDelete:', error);

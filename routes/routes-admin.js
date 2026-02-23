@@ -4,8 +4,10 @@ const router = express.Router();
 const filtros = require('../controllers/ADMIN/multimedia/filtros.controller');
 const uploadController = require('../controllers/ADMIN/multimedia/multimedia.controller');
 const viewController = require('../controllers/ADMIN/multimedia/viewMultimedia.controller');
+const tabsController = require('../controllers/ADMIN/multimedia/tabs.controller');
 
 module.exports = () => {
+    router.get('/countabs', tabsController.getTabs);
     router.get('/filter-subsistemas', filtros.getSubsystemFilter);
     router.get('/filter-semestres', filtros.getSemesterFilter);
     router.get('/filter-materias', filtros.getMateriaFilter);

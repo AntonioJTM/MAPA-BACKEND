@@ -68,11 +68,16 @@ server.on('error', (error) => {
 server.on('clientError', (error, socket) => {
     // Ignorar errores de conexión abortada (ECONNABORTED, ECONNRESET) - son comunes cuando el cliente cierra la conexión
     if (error.code === 'ECONNABORTED' || error.code === 'ECONNRESET' || error.message === 'write ECONNABORTED') {
-        // Estos errores son normales cuando el cliente cierra la conexión antes de que termine la respuesta
-        // No son críticos si la respuesta ya se envió correctamente
         return;
     }
-    
+    // HPE_INVALID_METHOD: alguien envió datos que no son una petición HTTP válida (scanners, WS mal formado, etc.)
+    if (error.code === 'HPE_INVALID_METHOD') {
+        if (!socket.destroyed) {
+            socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
+        }
+        return;
+    }
+
     // Solo registrar errores realmente importantes
     console.error('========================================');
     console.error('[ERROR EN CLIENTE HTTP]');
