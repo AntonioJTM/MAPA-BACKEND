@@ -1,29 +1,22 @@
 /**
  * Controlador de tabs: conteo por subtipo (MET_SUBTIPOS) con total de multimedia activa.
+ * Usa el procedimiento almacenado ObtenerTabsConteo().
  * Expone GET para Angular y getTabsData() para emitir por socket tras agregar/eliminar multimedia.
  */
 
-const TABS_QUERY = `
-  SELECT s.SBT_ID, s.SBT_TIPO AS TIPO, COUNT(m.MUL_ID) AS Total
-  FROM MET_SUBTIPOS s
-  LEFT JOIN MET_MULTIMEDIA m ON m.MUL_SBT_ID = s.SBT_ID AND m.MUL_STATUS = 1
-  WHERE s.SBT_STATUS = 1
-  GROUP BY s.SBT_ID, s.SBT_TIPO
-`;
-
 /**
- * Ejecuta la consulta de tabs y devuelve los datos (para HTTP o para socket).
+ * Ejecuta el procedimiento ObtenerTabsConteo y devuelve los datos (para HTTP o para socket).
  * @param {object} db - Pool de conexión (req.db)
  * @returns {Promise<Array<{ SBT_ID: number, TIPO: string, Total: number }>>}
  */
 function getTabsData(db) {
     return new Promise((resolve, reject) => {
-        db.query(TABS_QUERY, (err, rows) => {
+        db.query('CALL ObtenerTabsConteo()', (err, results) => {
             if (err) {
-                console.error('[TABS] Error en consulta:', err);
+                console.error('[TABS] Error en procedimiento ObtenerTabsConteo:', err);
                 return reject(err);
             }
-            const data = Array.isArray(rows) ? rows : [];
+            const data = Array.isArray(results) && results[0] ? results[0] : [];
             resolve(data);
         });
     });
