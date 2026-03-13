@@ -11,6 +11,7 @@ module.exports = () => {
     router.get('/filter-subsistemas', filtros.getSubsystemFilter);
     router.get('/filter-semestres', filtros.getSemesterFilter);
     router.get('/filter-materias', filtros.getMateriaFilter);
+    router.get('/filter-subtipos', filtros.getSubtiposFilter);
     router.get('/multimedia', viewController.getMultimedia);
     router.get('/update-status', viewController.statusMultimedia);
     router.get('/info-multimedia', viewController.infoMultimedia);
@@ -30,7 +31,7 @@ module.exports = () => {
             const tipoStr = tipo.toString();
             console.log('📤 Tipo de contenido recibido:', tipoStr);
 
-            if (['Audios', 'AR'].includes(tipoStr)) {
+            if (['Audios', 'AR', 'Recursos Pedagogicos'].includes(tipoStr)) {
                 uploadController.uploadFile(req, res, (err) => {
                     if (err) {
                         return res.status(400).json({

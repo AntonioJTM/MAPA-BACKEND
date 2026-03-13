@@ -7,8 +7,9 @@ exports.getMultimedia = async (req, res) => {
         }
 
         const subsistema = req.query.subsistema ? parseInt(req.query.subsistema) : null;
-        const semestre = req.query.semestre ? parseInt(req.query.semestre) : null;
-        const materia = req.query.materia ? parseInt(req.query.materia) : null;
+        const semestre   = req.query.semestre   ? parseInt(req.query.semestre)   : null;
+        const materia    = req.query.materia    ? parseInt(req.query.materia)    : null;
+        const subtipo    = req.query.subtipo    ? parseInt(req.query.subtipo)    : null;
 
         if (req.query.subsistema && isNaN(subsistema)) {
             return res.status(400).json({ error: 'Parámetro subsistema inválido' });
@@ -19,12 +20,16 @@ exports.getMultimedia = async (req, res) => {
         if (req.query.materia && isNaN(materia)) {
             return res.status(400).json({ error: 'Parámetro materia inválido' });
         }
+        if (req.query.subtipo && isNaN(subtipo)) {
+            return res.status(400).json({ error: 'Parámetro subtipo inválido' });
+        }
 
-        if (subsistema !== null || semestre !== null || materia !== null) {
+        if (subsistema !== null || semestre !== null || materia !== null || subtipo !== null) {
+            const sbtId = subtipo ?? tipo;
 
             req.db.query(
                 'CALL ObtenerMultimediaFiltrado(?, ?, ?, ?)',
-                [tipo, subsistema, semestre, materia],
+                [sbtId, subsistema, semestre, materia],
                 (error, results) => {
                     if (error) {
                         console.error('Error en la consulta filtrada:', error);
@@ -34,7 +39,6 @@ exports.getMultimedia = async (req, res) => {
                 }
             );
         } else {
-
             req.db.query(
                 'CALL ObtenerMultimedia(?)',
                 [tipo],

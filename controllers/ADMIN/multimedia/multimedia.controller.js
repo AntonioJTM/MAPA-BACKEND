@@ -37,6 +37,7 @@ const fileFilter = (req, file, cb) => {
         ar: ['model/gltf-binary', 'application/octet-stream'],
         videos: ['video/mp4', 'video/webm', 'video/ogg'],
         juegos: ['application/json'],
+        'recursos pedagogicos': ['application/pdf']
     };
 
     if (!tipo || !allowedTypes[tipo]?.includes(file.mimetype)) {
@@ -130,6 +131,7 @@ exports.handleUpload = async (req, res) => {
         const unidad = req.body.mul_unidad || req.body.unidad;
         const progresion = req.body.mul_progresion || req.body.progresion;
         const materia_id = req.body.mul_mat_id || req.body.mul_mat_id;
+        const subtipo_id = req.body.mul_sbt_id || req.body.subtipo_id;
 
         const missingFields = [];
 
@@ -143,7 +145,7 @@ exports.handleUpload = async (req, res) => {
             });
         }
 
-        const allowedContentTypes = ['Videos', 'Audios', 'AR', 'Juegos'];
+        const allowedContentTypes = ['Videos', 'Audios', 'AR', 'Juegos', 'Recursos Pedagogicos'];
         if (!allowedContentTypes.includes(req.body.type)) {
             return res.status(400).json({
                 error: 'Tipo de contenido no válido',
@@ -164,15 +166,17 @@ exports.handleUpload = async (req, res) => {
             'Audios': 2,
             'Juegos': 3,
             'AR': 4,
+            'Recursos Pedagogicos': subtipo_id,
         };
 
         switch (req.body.type) {
             case 'Audios':
             case 'AR':
+            case 'Recursos Pedagogicos':
                 if (!req.file && !isEdit) {
                     return res.status(400).json({
                         error: 'Archivo no recibido',
-                        detalle: 'Debes proporcionar un archivo para Audios o AR'
+                        detalle: 'Debes proporcionar un archivo para Audios o AR o Recursos Pedagogicos'
                     });
                 }
 
